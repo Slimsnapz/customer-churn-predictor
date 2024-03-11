@@ -33,11 +33,13 @@ Provides feature importance analysis of the variables.<br>
 #### feature importance 
 ![](IMG_20240311_111857.jpg)
 #### result obtained<br>
-![](Screenshot_2024-02-11-09-40-13-52_e2d5b3f32b79de1d45acd1fad96fbb0f.jpg)
-### Dataset Used<br>
-The project uses WA_Fn-UseC_-Telco-Customer-Churn.csv for analysis. The dataset contains customer data such as CustomerID, Gender, Senior citizen, partner, dependent, tenure, phone service, Multiplelines, internet service, online security, online backup, Device protection, Tech support, streaming Tv, streaminovies, contract, paperless, payment method, monthly charges, total charges, churn.<br>
+![](IMG_20240311_112237.jpg)
+
 ### Result Obtained<br>
-After training the model, the project achieved an accuracy of 76% on the test dataset.<br>
+After training the model, the project achieved an accuracy of 75% on the test dataset.<br>
 <br>
+
+#How to improve the model accuracy<br>
+You can try to improve the model accuracy by not scaling the variables in the dataset also you can improve accuracy by not reducing the dataset as i did in thie project.<br>
 Feel free to customize the content and formatting as needed for your
 GitHub readme documentation. Let me know if you need further assistance!
