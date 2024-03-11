@@ -1,28 +1,25 @@
-# Telecom-customer-churn-preduction-<br>
+# customer-churn-preduction-<br>
 ### Project Description<br>
-The Telecom Customer Churn Predictor is a data science project
-aimed at predicting customer churn in the telecommunications industry. 
-Leveraging machine learning techniques, this project utilizes logistic 
-regression to predict whether a customer is likely to churn, providing 
-valuable insights for retention strategies. The project also includes 
-data visualization using Matplotlib and Seaborn to explore the dataset, 
-feature importance analysis, and predictive analysis.<br>
+The "Customer Churn Prediction" project is a machine learning project aimed at predicting the probability of customer churn. Leveraging Python programming, Jupyter Notebook, and various libraries including pandas, numpy, matplotlib, seaborn, and scikit-learn, this project showcases proficiency in predictive analysis, critical thinking, data manipulation, preprocessing, machine learning, and exploratory data analysis (EDA).
+The project utilized a dataset named "churn" containing features such as state, area code, account length, international plan, phone number, voice mail plan, number of voicemail messages, and various call and charge metrics. Through comprehensive data preprocessing and exploratory data analysis, insights were gained into the characteristics of churned customers.
+
+Using logistic regression as the predictive modeling technique, a machine learning model was trained to predict the probability of customer churn. The model achieved a respectable accuracy of 78%, indicating its effectiveness in identifying potential churners.<br>
 ### Skills Utilized<br>
+Predictive Analysis<br>
+Critical Thinking<br>
+Data Manipulation<br>
+Data Preprocessing<br>
 Machine Learning<br>
+Exploratory Data Analysis (EDA)<br>
+Python Programming<br>
 Jupyter Notebook<br>
-Python<br>
-Logistic Regression<br>
-sk-learn<br>
+Pandas<br>
+Numpy<br>
 Matplotlib<br>
 Seaborn<br>
-Data Visualization<br>
-Data Cleaning<br>
-Data Preprocessing<br>
-Predictive Analysis<br>
-Problem Solving<br>
-Critical Thinking<br>
+Scikit-learn<br>
 ### Key Features<br>
-Utilizes logistic regression to predict customer churn.
+Utilizes logistic regression to predict the probability of customer churn.
 Displays the probability of customer churning.
 Provides feature importance analysis of the variables.<br>
 ### Project Images<br>
