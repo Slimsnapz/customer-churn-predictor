@@ -39,7 +39,7 @@ Provides feature importance analysis of the variables.<br>
 After training the model, the project achieved an accuracy of 75% on the test dataset.<br>
 <br>
 
-#How to improve the model accuracy<br>
+# How to improve the model accuracy<br>
 You can try to improve the model accuracy by not scaling the variables in the dataset also you can improve accuracy by not reducing the dataset as i did in thie project.<br>
 Feel free to customize the content and formatting as needed for your
 GitHub readme documentation. Let me know if you need further assistance!
