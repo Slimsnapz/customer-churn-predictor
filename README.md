@@ -24,7 +24,7 @@ Displays the probability of customer churning.
 Provides feature importance analysis of the variables.<br>
 ### Project Images<br>
 #### Charts
-![](IMG_20240211_084109.jpg)
+![](IMG_20240311_092726.jpg)
 ![](IMG_20240211_084234.jpg)
 ![](IMG_20240211_084327.jpg)
 ![](IMG_20240211_084417.jpg)
