@@ -28,8 +28,8 @@ Provides feature importance analysis of the variables.<br>
 ![](IMG_20240311_092705.jpg)
 
 #### Code snippet<br>
-![](Screenshot_2024-02-11-08-58-06-71_e2d5b3f32b79de1d45acd1fad96fbb0f.jpg)
-![](Screenshot_2024-02-11-08-57-56-43_e2d5b3f32b79de1d45acd1fad96fbb0f.jpg)
+![](IMG_20240311_094259.jpg)
+![](IMG_20240311_094231.jpg).
 #### feature importance 
 ![](IMG_20240211_091136.jpg)
 #### result obtained<br>
