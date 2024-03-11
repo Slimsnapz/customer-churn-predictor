@@ -25,9 +25,7 @@ Provides feature importance analysis of the variables.<br>
 ### Project Images<br>
 #### Charts
 ![](IMG_20240311_092726.jpg)
-![](IMG_20240211_084234.jpg)
-![](IMG_20240211_084327.jpg)
-![](IMG_20240211_084417.jpg)
+![](IMG_20240311_092726.jpg)
 
 #### Code snippet<br>
 ![](Screenshot_2024-02-11-08-58-06-71_e2d5b3f32b79de1d45acd1fad96fbb0f.jpg)
