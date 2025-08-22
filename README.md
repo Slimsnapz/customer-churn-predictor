@@ -1,4 +1,4 @@
-# customer-churn-preduction-<br>
+# customer-churn-prediction-<br>
 ### Project Description<br>
 The "Customer Churn Prediction" project is a machine learning project aimed at predicting the probability of customer churn. Leveraging Python programming, Jupyter Notebook, and various libraries including pandas, numpy, matplotlib, seaborn, and scikit-learn, this project showcases proficiency in predictive analysis, critical thinking, data manipulation, preprocessing, machine learning, and exploratory data analysis (EDA).
 The project utilized a dataset named "churn" containing features such as state, area code, account length, international plan, phone number, voice mail plan, number of voicemail messages, and various call and charge metrics. Through comprehensive data preprocessing and exploratory data analysis, insights were gained into the characteristics of churned customers.
