@@ -1,4 +1,4 @@
-# Telecom Customer Churn Predictor 📊
+# Telecom Customer Churn Predictor
 
 A full-stack machine learning application designed to predict telecom customer churn risk. This project bridges the gap between raw data analysis and production-ready software by combining a robust Scikit-learn predictive model with a modern, interactive Next.js web dashboard.
 
