@@ -4,10 +4,10 @@ import joblib
 import pandas as pd
 
 app = Flask(__name__)
-# Enabling CORS so Next.js on port 3000 can talk to Flask on port 5000
+# Enabling CORS so Next.js can talk to Flask
 CORS(app) 
 
-# Loading the two trained pipelines into memory
+# Loading the champion pipeline into memory
 models = {
     'logistic_regression': joblib.load('logistic_regression_pipeline.pkl')
 }
@@ -17,23 +17,24 @@ def predict():
     try:
         data = request.json 
         
-        # Determine which model the front-end requested (defaults to your champion)
-        model_choice = data.get('model_choice', 'random_forest').lower()
+        # FIX 1: Look for 'model' (matches React) and default to 'logistic_regression'
+        model_choice = data.get('model', 'logistic_regression').lower()
         
         if model_choice not in models:
-            return jsonify({'error': 'Invalid model choice. Choose logistic_regression or random_forest.'}), 400
+            return jsonify({'error': 'Invalid model choice.'}), 400
         
         # Clean the payload so only the customer metrics remain
-        customer_data = {key: val for key, val in data.items() if key != 'model_choice'}
+        customer_data = {key: val for key, val in data.items() if key != 'model'}
         df = pd.DataFrame([customer_data])
         
         # Predict the probability of churn (Class 1)
         selected_model = models[model_choice]
         prob = selected_model.predict_proba(df)[0][1] 
         
+        # FIX 2: Return 'churn_risk' so React knows exactly where to read the number
         return jsonify({
             'model_used': model_choice,
-            'churn_risk_percentage': round(prob * 100, 2)
+            'churn_risk': f"{round(prob * 100, 2)}%"
         })
         
     except Exception as e:
