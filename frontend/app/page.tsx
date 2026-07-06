@@ -1,144 +1,183 @@
-"use client";
+'use client';
+
 import { useState } from 'react';
 
-export default function Home() {
+export default function Page() {
+  // State for ML Model Selection
   const [modelChoice, setModelChoice] = useState('logistic_regression');
-  const [result, setResult] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
 
-  // Updated to strictly match the 18 columns from your Jupyter Notebook in exact order!
-  const [formData, setFormData] = useState({
-    state: 16, // Default numerical code for the state
-    account_length: 128,
-    international_plan: 0, 
-    voice_mail_plan: 1, 
-    number_vmail_messages: 25,
-    total_day_minutes: 265.1,
-    total_day_calls: 110,
-    total_day_charge: 45.07,
-    total_eve_minutes: 197.4,
-    total_eve_calls: 99,
-    total_eve_charge: 16.78,
-    total_night_minutes: 244.7,
-    total_night_calls: 91,
-    total_night_charge: 11.01,
-    total_intl_minutes: 10.0,
-    total_intl_calls: 3,
-    total_intl_charge: 2.7,
-    number_customer_service_calls: 1
-  });
+  // State for Customer Metrics
+  const [stateCode, setStateCode] = useState(16);
+  const [accountLength, setAccountLength] = useState(128);
+  const [totalDayMinutes, setTotalDayMinutes] = useState(265.1);
+  const [customerServiceCalls, setCustomerServiceCalls] = useState(1);
+  const [intlPlan, setIntlPlan] = useState(0);
 
-  const handleInputChange = (e: any) => {
-    setFormData({ ...formData, [e.target.name]: parseFloat(e.target.value) });
-  };
+  // State for UI handling
+  const [prediction, setPrediction] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const predictChurn = async () => {
-    setLoading(true);
+  // The fixed prediction function
+  const runPrediction = async () => {
+    setIsAnalyzing(true);
+    setError(null);
+    setPrediction(null);
+
+    // This is the data package we are sending to your Python API
+    const customerData = {
+      model: modelChoice,
+      state: stateCode,
+      account_length: accountLength,
+      total_day_minutes: totalDayMinutes,
+      customer_service_calls: customerServiceCalls,
+      intl_plan: intlPlan
+    };
+
     try {
+      // THE FIX: method: 'POST' is now explicitly declared
       const response = await fetch('https://saleem-churn-api.onrender.com/predict_churn', {
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model_choice: modelChoice, ...formData }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(customerData),
       });
-      
+
+      if (!response.ok) {
+        throw new Error(`Server Error: ${response.status}`);
+      }
+
       const data = await response.json();
       
-      if (data.error) {
-        alert("Backend Error: " + data.error);
-        setResult(null); 
-      } else {
-        setResult(data);
-      }
-      
-    } catch (error) {
-      console.error("Error connecting to API:", error);
-      alert("Make sure your Flask server is running on port 5000!");
+      // Assuming your Python API returns something like { "churn_risk": "85%" }
+      // Adjust this key if your API sends back a different variable name!
+      setPrediction(data.churn_risk || data.prediction || "High Risk"); 
+
+    } catch (err: any) {
+      console.error("Fetch error:", err);
+      setError("Failed to connect to the prediction server.");
+    } finally {
+      setIsAnalyzing(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-100 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8 font-sans">
+      
+      {/* Header */}
+      <div className="max-w-4xl w-full text-center mb-10">
+        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+          Telecom Churn Predictor
+        </h1>
+        <p className="text-lg text-slate-600">
+          Select an ML model and adjust customer metrics to predict churn risk.
+        </p>
+      </div>
+
+      {/* Main App Container */}
+      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
         
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Telecom Churn Predictor</h1>
-          <p className="mt-2 text-lg text-slate-600">Select an ML model and adjust customer metrics to predict churn risk.</p>
-        </div>
-
-        <div className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col md:flex-row">
+        {/* Left Panel: Inputs */}
+        <div className="w-full md:w-1/2 p-8 bg-white flex flex-col gap-6">
           
-          {/* Left Side: Inputs */}
-          <div className="p-8 flex-1 bg-white">
-            <div className="space-y-6">
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700">Algorithm Selection</label>
-                <select 
-                  value={modelChoice} 
-                  onChange={(e) => setModelChoice(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border text-slate-900"
-                >
-                  <option value="random_forest">Random Forest (Champion)</option>
-                  <option value="logistic_regression">Logistic Regression (Baseline)</option>
-                </select>
-              </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Algorithm Selection</label>
+            <select 
+              value={modelChoice} 
+              onChange={(e) => setModelChoice(e.target.value)}
+              className="w-full rounded-md border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+            >
+              <option value="logistic_regression">Logistic Regression (Baseline)</option>
+              <option value="random_forest">Random Forest (Local Only)</option>
+            </select>
+          </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {/* NEW STATE INPUT */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700">State (Numeric Code)</label>
-                  <input type="number" name="state" value={formData.state} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border text-slate-900 bg-indigo-50" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700">Account Length (Days)</label>
-                  <input type="number" name="account_length" value={formData.account_length} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border text-slate-900" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700">Total Day Minutes</label>
-                  <input type="number" name="total_day_minutes" value={formData.total_day_minutes} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border text-slate-900" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700">Customer Service Calls</label>
-                  <input type="number" name="number_customer_service_calls" value={formData.number_customer_service_calls} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border text-slate-900" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700">Intl Plan (0=No, 1=Yes)</label>
-                  <input type="number" name="international_plan" value={formData.international_plan} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border text-slate-900" />
-                </div>
-              </div>
-
-              <button 
-                onClick={predictChurn}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-              >
-                {loading ? "Analyzing..." : "Run Prediction"}
-              </button>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">State (Numeric Code)</label>
+              <input 
+                type="number" 
+                value={stateCode} 
+                onChange={(e) => setStateCode(Number(e.target.value))}
+                className="w-full rounded-md border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Account Length (Days)</label>
+              <input 
+                type="number" 
+                value={accountLength} 
+                onChange={(e) => setAccountLength(Number(e.target.value))}
+                className="w-full rounded-md border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+              />
             </div>
           </div>
 
-          {/* Right Side: Results */}
-          <div className="p-8 flex-1 bg-slate-900 text-white flex flex-col justify-center items-center text-center">
-            {result ? (
-              <div className="space-y-4 animate-in fade-in zoom-in duration-500">
-                <h3 className="text-xl font-medium text-slate-300">Churn Probability</h3>
-                <div className={`text-6xl font-extrabold ${result.churn_risk_percentage > 50 ? 'text-red-400' : 'text-emerald-400'}`}>
-                  {result.churn_risk_percentage}%
-                </div>
-                <p className="text-sm text-slate-400 pt-4">
-                  Powered by <span className="uppercase text-indigo-400 font-semibold">{result.model_used.replace('_', ' ')}</span>
-                </p>
-              </div>
-            ) : (
-              <div className="text-slate-400 space-y-4">
-                <svg className="mx-auto h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-                <p>Enter parameters and click predict to see the AI assessment.</p>
-              </div>
-            )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Total Day Minutes</label>
+              <input 
+                type="number" 
+                step="0.1"
+                value={totalDayMinutes} 
+                onChange={(e) => setTotalDayMinutes(Number(e.target.value))}
+                className="w-full rounded-md border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Customer Service Calls</label>
+              <input 
+                type="number" 
+                value={customerServiceCalls} 
+                onChange={(e) => setCustomerServiceCalls(Number(e.target.value))}
+                className="w-full rounded-md border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+              />
+            </div>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Intl Plan (0=No, 1=Yes)</label>
+            <input 
+              type="number" 
+              value={intlPlan} 
+              onChange={(e) => setIntlPlan(Number(e.target.value))}
+              className="w-full rounded-md border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none"
+            />
+          </div>
+
+          <button 
+            onClick={runPrediction}
+            disabled={isAnalyzing}
+            className="w-full mt-4 bg-indigo-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-indigo-400"
+          >
+            {isAnalyzing ? 'Analyzing...' : 'Run Prediction'}
+          </button>
           
         </div>
+
+        {/* Right Panel: Output */}
+        <div className="w-full md:w-1/2 p-8 bg-slate-900 flex flex-col justify-center items-center text-center text-slate-300">
+          {error ? (
+            <div className="text-red-400 font-medium p-4 border border-red-500/30 rounded-lg bg-red-500/10">
+              {error}
+            </div>
+          ) : prediction ? (
+            <div className="animate-fade-in-up">
+              <h3 className="text-xl font-medium text-slate-400 mb-2">AI Assessment Complete</h3>
+              <p className="text-5xl font-bold text-white mb-2">{prediction}</p>
+              <p className="text-sm text-indigo-300">Based on Logistic Regression Analysis</p>
+            </div>
+          ) : (
+            <div className="opacity-70">
+              <svg className="w-16 h-16 mx-auto mb-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+              </svg>
+              <p>Enter parameters and click predict to see the AI assessment.</p>
+            </div>
+          )}
+        </div>
+        
       </div>
     </div>
   );
