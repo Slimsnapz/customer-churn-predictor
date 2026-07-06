@@ -1,21 +1,36 @@
 # Telecom Customer Churn Predictor
 
-A full-stack machine learning application designed to predict telecom customer churn risk. This project bridges the gap between raw data analysis and production-ready software by combining a robust Scikit-learn predictive model with a modern, interactive Next.js web dashboard.
+An end-to-end Machine Learning pipeline and full-stack web application designed to predict telecom customer churn risk based on usage metrics. 
 
-## Architecture
-* **Backend (AI Engine):** Python, Flask, Scikit-learn, Pandas, Joblib
-* **Frontend (UI/UX):** Next.js, React, Tailwind CSS
-* **Modeling Strategy:** Random Forest Classifier (Champion Model) vs. Logistic Regression (Baseline)
+This project demonstrates the complete ML lifecycle: from training classification models in Python to deploying a responsive Next.js dashboard backed by a cloud-hosted Flask API.
 
-## The Machine Learning Pipeline
-The predictive engine was trained on standard Telecom Churn datasets. The data pipeline handles missing values, scales numerical features via `StandardScaler`, and encodes categorical variables. The champion Random Forest model identifies high-risk customers based on 18 critical account features, including total day minutes, customer service calls, and international plan status.
+## Live Demo
+* **Frontend Dashboard:** https://customer-churn-predictor-pied.vercel.app/
+* **Backend API:** https://dashboard.render.com/web/srv-d93rubq8qa3s73bbmf20/logs?t=app&r=live
 
-## Local Setup & Installation
+## System Architecture
 
-To run this application locally, you must run both the backend API and the frontend dashboard simultaneously.
+### Frontend (User Interface)
+* **Framework:** Next.js / React
+* **Styling:** Tailwind CSS
+* **Hosting:** Vercel
+* **Features:** Responsive design, asynchronous API state management, dynamic error handling.
 
-### Part 1: Start the Backend (Flask API)
-1. Open a terminal and navigate to the root directory.
-2. Install the required Python dependencies:
-   ```bash
-   pip install -r requirements.txt
+### Backend (Machine Learning API)
+* **Framework:** Python / Flask
+* **ML Library:** Scikit-Learn, Pandas, Joblib
+* **Hosting:** Render
+* **Model:** Logistic Regression Pipeline (Champion)
+* **Features:** CORS enabled, dynamic DataFrame padding, automated feature-mapping to prevent strict shape-mismatch errors from Scikit-Learn.
+
+## Machine Learning Engine
+The prediction engine utilizes a Logistic Regression classification model trained on a standard Telecom Churn dataset. 
+
+**Dynamic Feature Mapping:** The Flask API includes a custom preprocessing layer. If the frontend submits a partial dataset (e.g., 5 metrics instead of the 20+ used during training), the API automatically queries the model's memory, generates a safely padded DataFrame with default baseline values for missing columns, and maps the incoming React payload to the exact feature names expected by the Scikit-Learn pipeline. 
+
+## How to Run Locally
+
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/YourUsername/customer-churn-predictor.git](https://github.com/YourUsername/customer-churn-predictor.git)
+cd customer-churn-predictor
