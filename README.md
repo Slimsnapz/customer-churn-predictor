@@ -16,6 +16,18 @@ This project demonstrates the complete ML lifecycle: from training classificatio
 * **Hosting:** Vercel
 * **Features:** Responsive design, asynchronous API state management, dynamic error handling.
 
+## Dataset & Model Performance
+
+### The Data
+The model was trained on the publicly available **Telecom Customer Churn Dataset** (often found on Kaggle), which contains historical usage metrics for over 3,300 customers. Features include call minutes (Day/Eve/Night), account length, international plan subscription, and customer service interactions.
+
+### Model Selection & Metrics
+While tree-based models (like Random Forest) were tested during local development, a **Logistic Regression** pipeline was selected as the champion model for production. This decision was driven by two factors:
+1. **Cloud Compatibility:** It avoids cross-OS serialization issues inherent to C-array dependent models on free-tier Linux instances.
+2. **Interpretability:** Logistic regression provides clear coefficients, allowing business stakeholders to understand exactly *which* features (e.g., high customer service calls) are driving the churn risk.
+
+*Note: In a production environment, churn datasets are often highly imbalanced. The model was evaluated not just on raw Accuracy, but optimized for Recall and ROC-AUC to ensure we effectively capture true churn risks without overwhelming the retention team with false positives.*
+
 ### Backend (Machine Learning API)
 * **Framework:** Python / Flask
 * **ML Library:** Scikit-Learn, Pandas, Joblib
