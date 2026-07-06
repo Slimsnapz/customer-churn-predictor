@@ -35,8 +35,7 @@ export default function Home() {
   const predictChurn = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/predict_churn', {
-        method: 'POST',
+      const response = await fetch('https://saleem-churn-api.onrender.com/predict_churn', {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model_choice: modelChoice, ...formData }),
       });
