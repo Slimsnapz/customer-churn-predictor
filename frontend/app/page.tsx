@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [modelChoice, setModelChoice] = useState('random_forest');
+  const [modelChoice, setModelChoice] = useState('logistic_regression');
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 

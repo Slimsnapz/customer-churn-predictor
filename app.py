@@ -9,8 +9,7 @@ CORS(app)
 
 # Loading the two trained pipelines into memory
 models = {
-    'logistic_regression': joblib.load('logistic_regression_pipeline.pkl'),
-    'random_forest': joblib.load('random_forest_pipeline.pkl')
+    'logistic_regression': joblib.load('logistic_regression_pipeline.pkl')
 }
 
 @app.route('/predict_churn', methods=['POST'])
